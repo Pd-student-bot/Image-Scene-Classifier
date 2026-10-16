@@ -1,11 +1,11 @@
-# Image‑Scene‑Classifier
+下面是**完整更新后的README.md**，在原有基础上新增了「常见问题 / FAQ」双语板块，专门提醒路径、CUDA、数据集格式、预训练网络下载等高频踩坑点，其余内容全部保留。直接全部复制保存为 `README.md` 使用。
 
-> 
+```
+# Image‑Scene‑Classifier
 > PyTorch实现的风景 / 美食 / 人像三分类图像训练&推理完整工具
 > Complete PyTorch image classification toolkit for landscape, food, portrait.
 
 ## 📖 项目简介
-
 本项目是基于 ResNet‑18 的图像分类完整Python代码。
 包含**数据集加载、模型训练、测试评估、预测可视化、单张图片推理、批量图片自动分类**全套功能。专门用于区分三类图片：`风景`、`美食`、`人像`。
 
@@ -16,11 +16,8 @@
 - 可生成预测结果可视化图片；
 - 支持**单张图片预测**、**整个文件夹批量自动分类**，会按照预测类别自动建立子文件夹并拷贝图片。
 
-> 
 > This is a full‑featured Python image classification project based on ResNet‑18 with transfer‑learning.
 > It covers dataset loading, model training, evaluation, prediction visualization, single‑image inference and batch folder classification for three categories: `landscape`, `food`, `portrait`.
-> 
-> 
 > - Pre‑trained ResNet‑18 backbone for transfer learning
 > - Auto detect CUDA GPU or CPU device
 > - Print loss & accuracy during training with progress bar
@@ -28,12 +25,10 @@
 > - Generate prediction visualization figure
 > - Support single image prediction and batch classification; images will be copied into category sub‑folders automatically.
 
-> 
 > ⚠️ 本项目仅用于技术学习、课程练习，不提供预训练权重文件，需要使用者自行准备数据集进行训练。
 > ⚠️ For technical learning & practice only. No pre‑trained weights are provided. You need to prepare your own dataset for training.
 
 ## ✨ 功能特性｜Features
-
 - ✅ 自动环境检测，优先使用NVIDIA GPU，无GPU自动降级CPU
 - ✅ 数据集加载：使用`ImageFolder`，按子文件夹名称作为分类标签
 - ✅ 迁移学习：冻结ResNet18主干，仅训练最后全连接层
@@ -44,9 +39,7 @@
 - ✅ 批量处理文件夹：自动把图片复制到 `classified_images/类别名/`
 - ✅ 支持 jpg / jpeg / png / bmp / gif 常见图片格式
 
-> 
 > Features
-
 - ✅ Auto environment detection: use CUDA GPU if available, fallback to CPU
 - ✅ Dataset loading via ImageFolder, sub‑folder names act as class labels
 - ✅ Transfer‑learning: freeze ResNet‑18 backbone, only train final fully‑connected layer
@@ -58,10 +51,9 @@
 - ✅ Support jpg / jpeg / png / bmp / gif image formats
 
 ## 🗂 数据集目录结构
-
 你的数据集根目录下，必须存在 `train` 和 `test` 两个子目录，每个内部建立三个类别文件夹：
-
 ```
+
 你的数据集总文件夹/
 ├─ train/
 │   ├─ 风景/
@@ -71,12 +63,11 @@
     ├─ 风景/
     ├─ 美食/
     └─ 人像/
-```
 
-> 
+```
 > Dataset folder structure
-
 ```
+
 dataset_root/
 ├─ train/
 │   ├─ 风景/
@@ -86,13 +77,12 @@ dataset_root/
     ├─ 风景/
     ├─ 美食/
     └─ 人像/
+
 ```
 
 ## 🛠 环境依赖｜Requirements
-
 Python >= 3.9
-
-```
+```bash
 pip install torch torchvision numpy pillow matplotlib tqdm opencv‑python
 ```
 
@@ -185,6 +175,46 @@ Program workflow:
 - `visualizations/`: prediction sample plot
 - `classified_images/`: batch inference output, images grouped by predicted class.
 
+## ❗ 常见问题｜FAQ
+
+### 中文
+
+1. **路径不存在报错**
+代码内写有示例绝对路径，下载代码后**必须修改为你本机真实文件夹路径**，直接运行会提示找不到目录。Windows路径建议使用原始字符串 `r""`。
+2. **CPU训练速度极慢**
+没有NVIDIA CUDA显卡会自动使用CPU训练，训练耗时会非常久，建议使用支持CUDA的PyTorch版本 + NVIDIA显卡。
+3. **数据集加载失败**
+
+- train、test下子文件夹名字必须严格为：`风景`、`美食`、`人像`；
+- 文件夹层级不能多嵌套一层；
+- 文件夹内尽量不要放置非图片文件。
+
+4. **预训练模型下载慢/失败**
+第一次运行会在线下载resnet18预训练权重，如果网络较差会下载失败，可以手动下载权重放到本地缓存目录。
+5. **matplotlib绘图报错（无图形界面服务器环境）**
+Linux无桌面环境运行会可视化报错，可以注释掉 `visualize_predictions()` 函数调用跳过绘图。
+6. **类别识别效果差**
+需要收集足量高质量数据集，适当调高训练轮数 epochs。
+
+### English
+
+1. **Path not found error**
+The source code contains example absolute file paths. **You must replace them with your local folder path**, otherwise the program will report directory‑missing error. Use raw string `r""` for Windows paths.
+2. **Extremely slow training on CPU**
+If no NVIDIA CUDA‑capable GPU is available, training will run on CPU and take a very long time. It is recommended to use PyTorch with CUDA and NVIDIA GPU hardware.
+3. **Dataset loading failure**
+
+- Sub‑folder names under train/test must be exactly `风景`, `美食`, `人像`.
+- Do not add extra nested folder layers.
+- Avoid putting non‑image files inside dataset folders.
+
+4. **Slow or failed downloading pre‑trained weights**
+ResNet‑18 pretrained weights will be downloaded on first run. Under poor network, download may fail. You can manually download weights and place them into local cache directory.
+5. **Matplotlib plot error on headless server**
+When running on Linux server without GUI, visualization will throw error. You can comment out `visualize_predictions()` call to skip plotting.
+6. **Poor classification accuracy**
+Prepare sufficient high‑quality dataset, you may increase training epochs for better performance.
+
 ## ⚠️ 注意事项｜Notes
 
 1. Windows路径使用原始字符串 `r""`，避免转义报错；
@@ -214,11 +244,12 @@ Program workflow:
 
 MIT License
 
+```
+
 ---
 
-### 配套 `.gitignore` 建议（你可以新建一个`.gitignore`上传到仓库，避免把本地产物上传GitHub）
-
-```
+### 配套 `.gitignore`（不变，附上方便你复制）
+```gitignore
 # python缓存
 __pycache__/
 *.pyc
@@ -242,4 +273,3 @@ classified_images/
 .idea/
 *.swp
 *.swo
-```
